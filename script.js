@@ -7,19 +7,21 @@ var csv_file_API_2 = "./team2.csv";
 var APIs_array = [csv_file_API_1, csv_file_API_2];
 
 
-// Flatten our data down to 1 array
-Object.defineProperty(Array.prototype, 'flat',
-    {
-        value: function (depth) {
-            depth = 1;
-            return this.reduce(
-                function (flat, toFlatten) {
-                    return flat.concat((Array.isArray(toFlatten) && (depth > 1)) ? toFlatten.flat(depth - 1) : toFlatten);
-                }, []
-            );
-        },
-        configurable: true
-});
+if (!Array.prototype.flat) {
+  Array.prototype.flat = function(depth) {
+    var flattend = [];
+    (function flat(array, depth) {
+      for (let el of array) {
+        if (Array.isArray(el) && depth > 0) {
+          flat(el, depth - 1);
+        } else {
+          flattend.push(el);
+        }
+      }
+    })(this, Math.floor(depth) || 1);
+    return flattend;
+  };
+}
 
 
 // Do some stuff when page hmtl page is launched
